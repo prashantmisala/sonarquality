@@ -16,16 +16,18 @@ pipeline {
         stage('testing') {
             steps {
             echo 'package'
-            sh 'mvn sonar:sonar -Dsonar.host.url=http://34.231.242.10:9000 -Dsonar.login=d9716ed2d72b2f7281638a3b20cf5d1c859e2f1a'
+            sh 'mvn sonar:sonar'
             }
        }
-       stage('deploy') {
+      stage("Quality Gate") {
             steps {
-            sh 'mvn deploy'
+              timeout(time: 1, unit: 'HOURS') {
+                waitForQualityGate abortPipeline: true
+              }
             }
-        }
-    }    
- }  
+          }
+       }    
+   }  
      
     
 
